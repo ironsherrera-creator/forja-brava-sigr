@@ -13,13 +13,13 @@ Este documento facilita el acceso y la evaluación académica de **FORJA BRAVA �
 
 ---
 
-## Credenciales de evaluación
 
-| Rol | Nombre del perfil | Correo electrónico | Contraseña |
+
+| Rol | Correo | Nombre de perfil | Contraseña generada |
 | :--- | :--- | :--- | :--- |
-| **Cliente** | Valentina Gómez (Prueba) | `cliente@forjabrava.com` | Entregada al profesor por canal privado |
-| **Mesero** | Mateo Ríos (Prueba) | `mesero@forjabrava.com` | Entregada al profesor por canal privado |
-| **Administrador** | Camila Herrera (Prueba) | `admin@forjabrava.com` | Entregada al profesor por canal privado |
+| cliente | cliente@forjabrava.com | Valentina Gómez (Prueba) | 3dLw96*#DChf8_2!ZP |
+| mesero | mesero@forjabrava.com | Mateo Ríos (Prueba) | !nV3Na!Qamq9tpqGdj |
+| administrador | admin@forjabrava.com | Camila Herrera (Prueba) | _EJe-yz*uVC4i3g@@p |
 
 > **Nota de seguridad:** Este repositorio de GitHub es público. Por buenas prácticas de seguridad, ninguna contraseña real, clave de Supabase ni credencial privada se almacena en este documento; las contraseñas de evaluación se entregan al profesor exclusivamente por un canal privado.
 
