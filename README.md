@@ -2,7 +2,42 @@
 
 **Sistema Integral de Gestión de Restaurante** para FORJA BRAVA (*El sabor que se hace a fuego.*).
 
-Este repositorio se encuentra en **Etapa 1 — Preparación y migración controlada** hacia una arquitectura moderna con **React + Vite + Tailwind CSS v4 + React Router + Zod + ESLint**, conservando la identidad visual, los recursos gráficos locales y la documentación de diseño y arquitectura en `docs/`.
+- **Repositorio:** https://github.com/ironsherrera-creator/forja-brava-sigr
+- **Tecnologías:** React 19 · Vite 8 · JavaScript · Tailwind CSS v4 · Supabase · PostgreSQL · Vitest · Playwright · Vercel
+
+---
+
+## 🚀 Acceso al sistema
+
+- **Entorno de producción (desplegado en Vercel):** https://forja-brava-sigr.vercel.app/
+
+El sistema cuenta con **tres perfiles de acceso independientes** (`Administrador`, `Mesero` y `Cliente`), cada uno con vistas, funcionalidades y permisos diferenciados respaldados por autenticación de Supabase, Row Level Security (RLS) y funciones RPC en PostgreSQL.
+
+---
+
+## 👥 Cuentas de evaluación académica
+
+| Rol | Correo electrónico | Nombre del perfil | Funcionalidades que puede evaluar el profesor |
+| :--- | :--- | :--- | :--- |
+| **Administrador** | `admin@forjabrava.com` | Camila Herrera (Prueba) | Gestión de productos, categorías, usuarios, reservas, mesas, pedidos, caja, configuración y reportes. |
+| **Mesero** | `mesero@forjabrava.com` | Mateo Ríos (Prueba) | Consulta de mesas, registro de pedidos, seguimiento de cuentas y operaciones propias del perfil. |
+| **Cliente** | `cliente@forjabrava.com` | Valentina Gómez (Prueba) | Consulta del catálogo, reservas y funcionalidades habilitadas para clientes. |
+
+> **Nota de seguridad:** Por tratarse de un repositorio público, **las contraseñas de estas cuentas no se incluyen en este `README.md`**. Las contraseñas de evaluación se entregan al profesor mediante un canal privado.
+
+---
+
+## 🧭 Instrucciones de acceso
+
+1. Ingresar al enlace de producción: https://forja-brava-sigr.vercel.app/
+2. Acceder al formulario de inicio de sesión (`/login`).
+3. Introducir el correo electrónico y la contraseña correspondientes al perfil asignado.
+4. Evaluar las funcionalidades habilitadas para ese rol.
+5. Cerrar sesión desde el menú de usuario antes de iniciar sesión con otro perfil.
+
+---
+
+Este repositorio conserva la arquitectura moderna con **React + Vite + Tailwind CSS v4 + React Router + Zod + ESLint**, la identidad visual, los recursos gráficos locales y la documentación de diseño y arquitectura en `docs/`.
 
 ---
 
