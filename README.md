@@ -37,6 +37,61 @@ El sistema cuenta con **tres perfiles de acceso independientes** (`Administrador
 
 ---
 
+## 🎓 Guía de evaluación académica
+
+Esta guía está diseñada para facilitar la revisión funcional y técnica de **FORJA BRAVA — SIGR** en producción:
+
+- **Aplicación desplegada en Vercel:** https://forja-brava-sigr.vercel.app/
+- **Documento de credenciales y acceso:** [Consultar credenciales e instrucciones de evaluación](docs/CREDENCIALES-EVALUACION.md)
+
+### Procedimiento recomendado para el profesor
+
+**Paso 1. Ingresar a la aplicación**  
+Acceder al sistema mediante el dominio oficial de Vercel: https://forja-brava-sigr.vercel.app/.
+
+**Paso 2. Consultar las credenciales**  
+Abrir [Consultar credenciales e instrucciones de evaluación](docs/CREDENCIALES-EVALUACION.md), donde se detallan los nombres de perfil, correos electrónicos, roles e instrucciones de acceso. Las contraseñas de evaluación se entregan mediante un canal privado y no deben publicarse en este `README.md`.
+
+**Paso 3. Evaluar el perfil administrador**  
+Iniciar sesión con la cuenta de administrador (`admin@forjabrava.com`) para revisar:
+- Panel administrativo (`/admin`).
+- Gestión de productos y categorías (`/admin/productos`, `/admin/categorias`).
+- Gestión de usuarios y roles (`/admin/usuarios`, `/admin/roles`).
+- Administración de mesas y reservas (`/admin/mesas`, `/admin/reservas`).
+- Gestión y consulta de pedidos (`/admin/pedidos`).
+- Caja y operaciones financieras (`/admin/caja`, `/admin/movimientos`).
+- Reportes y auditoría (`/admin/reportes`, `/admin/auditoria`).
+
+**Paso 4. Evaluar el perfil mesero**  
+Iniciar sesión con la cuenta de mesero (`mesero@forjabrava.com`) para revisar:
+- Panel de mesero (`/mesero`).
+- Consulta de mesas (`/mesero/mesas`).
+- Registro de pedidos y comandas (`/mesero/comandas/nueva`).
+- Consulta de cuentas activas (`/mesero/cuentas`).
+- Seguimiento de pedidos y operaciones permitidas (`/mesero/pedidos`, `/mesero/historial`).
+
+**Paso 5. Evaluar el perfil cliente**  
+Iniciar sesión con la cuenta de cliente (`cliente@forjabrava.com`) para revisar:
+- Catálogo de productos (`/menu`).
+- Consulta de productos y complementos (`/producto/:slug`).
+- Reservas (`/cliente/reservas`).
+- Funcionalidades habilitadas para clientes (`/cliente`, `/cliente/perfil`, `/cliente/direcciones`, `/cliente/pedidos`, `/cliente/seguimiento`, `/cliente/historial`).
+
+**Paso 6. Cambiar de perfil**  
+Cerrar sesión desde el menú de usuario antes de ingresar con otra cuenta y repetir el procedimiento.
+
+### Documentación adicional para ampliar la evaluación
+
+- **Índice maestro de documentación:** [docs/00-indice-general.md](docs/00-indice-general.md)
+- **Arquitectura del sistema:** [docs/03-arquitectura/arquitectura-general.md](docs/03-arquitectura/arquitectura-general.md)
+- **Base de datos (MER y diccionario):** [docs/04-base-datos/modelo-entidad-relacion.md](docs/04-base-datos/modelo-entidad-relacion.md) · [docs/04-base-datos/diccionario-datos.md](docs/04-base-datos/diccionario-datos.md)
+- **Reglas de negocio:** [Pedidos](docs/05-reglas-negocio/pedidos.md) · [Reservas](docs/05-reglas-negocio/reservas.md) · [Mesas](docs/05-reglas-negocio/mesas.md) · [Caja y reportes](docs/05-reglas-negocio/caja-reportes.md)
+- **Seguridad y permisos:** [docs/03-arquitectura/autenticacion-autorizacion.md](docs/03-arquitectura/autenticacion-autorizacion.md) · [docs/03-arquitectura/seguridad.md](docs/03-arquitectura/seguridad.md)
+- **Guías de usuario y cuentas de prueba:** [docs/06-implementacion/guia-usuarios-prueba.md](docs/06-implementacion/guia-usuarios-prueba.md)
+- **Informes de pruebas, calidad y sincronización:** [docs/06-implementacion/implementacion-etapa-11-pruebas-aseguramiento-calidad.md](docs/06-implementacion/implementacion-etapa-11-pruebas-aseguramiento-calidad.md) · [docs/06-implementacion/sincronizacion-supabase-produccion.md](docs/06-implementacion/sincronizacion-supabase-produccion.md)
+
+---
+
 Este repositorio conserva la arquitectura moderna con **React + Vite + Tailwind CSS v4 + React Router + Zod + ESLint**, la identidad visual, los recursos gráficos locales y la documentación de diseño y arquitectura en `docs/`.
 
 ---
