@@ -11,6 +11,8 @@ export default [
       'css/**',
       'js/**',
       'docs/**',
+      'playwright-report/**',
+      'test-results/**',
     ],
   },
   {
@@ -39,7 +41,38 @@ export default [
     },
   },
   {
-    files: ['vite.config.js', 'eslint.config.js'],
+    files: ['tests/**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+      },
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+  {
+    files: [
+      'vite.config.js',
+      'vitest.config.js',
+      'playwright.config.js',
+      'eslint.config.js',
+      'scripts/**/*.{js,mjs}',
+    ],
     languageOptions: {
       ecmaVersion: 2022,
       globals: globals.node,

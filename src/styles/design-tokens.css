@@ -1,0 +1,144 @@
+/* ============================================================================
+ * FORJA BRAVA — SIGR
+ * Sistema Global de Design Tokens (Tailwind CSS v4 + CSS Custom Properties)
+ * ============================================================================ */
+
+@theme {
+  /* Paleta oficial FORJA BRAVA */
+  --color-carbon: #171613;
+  --color-coffee: #35251d;
+  --color-wood: #68452f;
+  --color-cream: #f1e8d8;
+  --color-paper: #e9dfcf;
+  --color-sand: #d6c2a3;
+  --color-fire: #c66a32;
+  --color-fire-hover: #e07c42;
+
+  /* Superficies y texto armonizados */
+  --color-surface: #faf6ee;
+  --color-surface-elevated: #fdfaf4;
+  --color-surface-muted: #efe6d6;
+  --color-surface-dark: #211d18;
+  --color-surface-dark-elevated: #2b241d;
+
+  --color-text-primary: #171613;
+  --color-text-secondary: #5d4f43;
+  --color-text-muted: #7a6b5d;
+  --color-text-on-dark: #f1e8d8;
+  --color-text-on-dark-muted: #d6c2a3;
+
+  /* Bordes */
+  --color-border: #d9c8ae;
+  --color-border-subtle: #e7dac6;
+  --color-border-strong: #bca687;
+
+  /* Colores semánticos armonizados con la paleta cálida */
+  --color-success: #2f6b32;
+  --color-success-bg: #e1efe0;
+  --color-success-border: #b6d5b5;
+
+  --color-warning: #8f5310;
+  --color-warning-bg: #f6e7cf;
+  --color-warning-border: #dfc192;
+
+  --color-error: #a64225;
+  --color-error-bg: #f4dcd2;
+  --color-error-border: #dcb09f;
+
+  --color-info: #3f5566;
+  --color-info-bg: #e4eaee;
+  --color-info-border: #bfd0db;
+
+  --color-disabled-bg: #e6dccd;
+  --color-disabled-text: #8c7e70;
+
+  /* Tipografías oficiales */
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "DM Sans", Arial, sans-serif;
+
+  /* Radios arquitectónicos discretos (evita exceso de botones píldora) */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-full: 9999px;
+
+  /* Sombras moderadas y cálidas */
+  --shadow-xs: 0 1px 2px rgba(23, 22, 19, 0.06);
+  --shadow-sm: 0 4px 12px rgba(23, 22, 19, 0.08);
+  --shadow-md: 0 10px 28px rgba(23, 22, 19, 0.12);
+  --shadow-lg: 0 20px 48px rgba(23, 22, 19, 0.22);
+}
+
+:root {
+  /* Alias heredados para compatibilidad total con la landing pública */
+  --ink: var(--color-carbon);
+  --coffee: var(--color-coffee);
+  --wood: var(--color-wood);
+  --cream: var(--color-cream);
+  --sand: var(--color-sand);
+  --fire: var(--color-fire);
+  --fire-hover: var(--color-fire-hover);
+  --paper: var(--color-paper);
+  --serif: var(--font-display);
+  --sans: var(--font-sans);
+  --gutter: clamp(24px, 7.4vw, 112px);
+
+  /* Dimensiones estructurales de layouts */
+  --sidebar-width: 264px;
+  --sidebar-collapsed-width: 76px;
+  --topbar-height: 68px;
+  --public-header-height: 84px;
+  --content-max-width: 1360px;
+
+  /* Tamaños de iconos */
+  --icon-xs: 14px;
+  --icon-sm: 16px;
+  --icon-md: 18px;
+  --icon-lg: 22px;
+
+  /* Transiciones discretas */
+  --transition-fast: 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-base: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-slow: 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Capas z-index */
+  --z-topbar: 30;
+  --z-sidebar: 40;
+  --z-dropdown: 50;
+  --z-drawer: 60;
+  --z-modal: 70;
+  --z-tooltip: 80;
+}
+
+/* Foco visible accesible global */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-fire);
+  outline-offset: 2px;
+}
+
+/* Utilidades de superficie editorial para áreas privadas */
+.sigr-app-shell {
+  min-height: 100vh;
+  background-color: var(--color-cream);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+.sigr-sidebar-surface {
+  background-color: var(--color-carbon);
+  color: var(--color-text-on-dark);
+  border-right: 1px solid rgba(214, 194, 163, 0.14);
+}
+
+.sigr-topbar-surface {
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.sigr-heading-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}

@@ -1,23 +1,62 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { ArrowDown, ArrowUpRight, Clock, MapPin, Phone, UtensilsCrossed } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LOCAL_IMAGES } from '../assets/images';
-import {
-  CATEGORIES_PREVIEW,
-  PRODUCTS_PREVIEW,
-  RESTAURANT_INFO,
-} from '../features/public/catalogPreview';
+import { ProductCard } from '../components/public/ProductCard';
+import { ProductImage } from '../components/public/ProductImage';
+import { ErrorState, SkeletonCard } from '../components/ui';
 import { useRevealObserver } from '../hooks/useRevealObserver';
+import {
+  fetchLandingData,
+  formatBusinessHoursList,
+} from '../services/catalogService';
 import { formatMoney } from '../utils/formatMoney';
 
 export function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState('todos');
+  const [data, setData] = useState({
+    settings: null,
+    categories: [],
+    products: [],
+    featuredProduct: null,
+    highlightedProducts: [],
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [reloadToken, setReloadToken] = useState(0);
+
   useRevealObserver();
 
-  const visibleProducts = PRODUCTS_PREVIEW.filter(
-    (item) => selectedCategory === 'todos' || item.category === selectedCategory,
-  );
-  const featuredProduct = PRODUCTS_PREVIEW[0];
-  const activeCategoriesCount = CATEGORIES_PREVIEW.length - 1;
+  const handleRetry = useCallback(() => {
+    setIsLoading(true);
+    setError(null);
+    setReloadToken((n) => n + 1);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetchLandingData().then((result) => {
+      if (!active) return;
+      if (result.error && result.products.length === 0 && result.categories.length === 0) {
+        setError(result.error);
+      } else {
+        setError(null);
+      }
+      setData({
+        settings: result.settings,
+        categories: result.categories,
+        products: result.products,
+        featuredProduct: result.featuredProduct,
+        highlightedProducts: result.highlightedProducts,
+      });
+      setIsLoading(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [reloadToken]);
+
+  const { settings, categories, featuredProduct, highlightedProducts } = data;
+  const businessHours = formatBusinessHoursList(settings?.business_hours);
 
   return (
     <>
@@ -45,11 +84,13 @@ export function HomePage() {
             vivo y sabor que deja huella.
           </p>
           <div className="hero-actions flex flex-col sm:flex-row">
-            <a className="button button-fire bg-fire hover:bg-fire/90" href="#menu">
-              EXPLORAR MENÚ <span>↗</span>
-            </a>
-            <a className="text-link" href="#esencia">
-              CONOCE NUESTRA ESENCIA <span>↓</span>
+            <Link className="button button-fire bg-fire hover:bg-fire-hover" to="/menu">
+              <span>EXPLORAR MENÚ</span>
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <a className="text-link inline-flex items-center gap-2" href="#esencia">
+              <span>CONOCE NUESTRA ESENCIA</span>
+              <ArrowDown className="h-3.5 w-3.5 text-fire" aria-hidden="true" />
             </a>
           </div>
         </div>
@@ -85,13 +126,14 @@ export function HomePage() {
         </div>
       </div>
 
+      {/* 01 / Nuestra Esencia */}
       <section className="essence section-light" id="esencia">
-        <div className="section-kicker reveal">
+        <div className="section-kicker">
           <span>01 / NUESTRA ESENCIA</span>
-          <span>BOGOTÁ, COLOMBIA</span>
+          <span>COCINA COLOMBIANA AL FUEGO</span>
         </div>
         <div className="essence-grid">
-          <div className="essence-title reveal">
+          <div className="essence-title">
             <span className="mini-label">MÁS FUEGO. MÁS SABOR.</span>
             <h2>
               NO ES SOLO
@@ -103,7 +145,7 @@ export function HomePage() {
             <div className="hand-drawn">✳</div>
           </div>
 
-          <div className="essence-copy reveal">
+          <div className="essence-copy">
             <p className="lead">
               Creemos que un buen antojo merece hacerse sin afán.
             </p>
@@ -112,9 +154,10 @@ export function HomePage() {
               pena y le ponemos acento colombiano a cada receta. Sin poses. Sin
               atajos. Solo comida hecha con ganas.
             </p>
-            <a className="under-link" href="#experiencia">
-              ASÍ LO HACEMOS <span>↗</span>
-            </a>
+            <Link className="under-link inline-flex items-center gap-2" to="/menu">
+              <span>VER LA CARTA COMPLETA</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-fire" aria-hidden="true" />
+            </Link>
             <div className="essence-note">
               <span>01</span>
               <p>
@@ -125,7 +168,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <figure className="essence-photo reveal">
+          <figure className="essence-photo">
             <img
               src={LOCAL_IMAGES.products.brava}
               alt="Hamburguesa artesanal a la parrilla con pan tostado y queso fundido"
@@ -133,21 +176,22 @@ export function HomePage() {
             />
             <figcaption>
               <span>01 — EL FUEGO HACE LO SUYO</span>
-              <span>↗</span>
+              <ArrowUpRight className="h-3 w-3 text-fire" aria-hidden="true" />
             </figcaption>
           </figure>
         </div>
       </section>
 
+      {/* 02 / Categorías y Productos Destacados desde Supabase */}
       <section className="menu-section" id="menu">
-        <div className="menu-top section-kicker reveal">
-          <span>02 / LA CARTA</span>
-          <span>HECHA PARA EL ANTOJO</span>
+        <div className="menu-top section-kicker">
+          <span>02 / LA CARTA EN VIVO</span>
+          <span>ACTUALIZADA DESDE COCINA</span>
         </div>
 
-        <div className="menu-heading reveal">
+        <div className="menu-heading">
           <div>
-            <span className="mini-label">ELIGE TU BATALLA</span>
+            <span className="mini-label">EXPLORA POR CATEGORÍA</span>
             <h2>
               DEL FUEGO
               <br />
@@ -161,128 +205,138 @@ export function HomePage() {
           </p>
         </div>
 
-        <div className="menu-toolbar">
-          <div
-            className="filters"
-            role="group"
-            aria-label="Filtrar menú por categoría"
-          >
-            {CATEGORIES_PREVIEW.map((category) => {
-              const isActive = selectedCategory === category.id;
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  className={`filter-btn ${isActive ? 'active' : ''}`}
-                  aria-pressed={isActive}
-                  onClick={() => setSelectedCategory(category.id)}
-                >
-                  {category.label}
-                  {category.id === 'todos' && (
-                    <span>{PRODUCTS_PREVIEW.length}</span>
-                  )}
-                </button>
-              );
-            })}
+        {error ? (
+          <ErrorState
+            title="No pudimos conectar con la carta"
+            description={error.message}
+            onRetry={handleRetry}
+          />
+        ) : isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
           </div>
-          <span className="menu-count">
-            {String(visibleProducts.length).padStart(2, '0')} ANTOJOS ·{' '}
-            {String(activeCategoriesCount).padStart(2, '0')} CATEGORÍAS
-          </span>
-        </div>
-
-        <div className="product-grid" aria-live="polite">
-          {visibleProducts.map((item, index) => (
-            <article
-              key={item.id}
-              className="product-card"
-              style={{ animationDelay: `${index * 45}ms` }}
-            >
-              <div className="product-image-wrap">
-                <img
-                  src={item.image}
-                  alt={`${item.name}, ${item.desc}`}
-                  loading="lazy"
-                />
-                {item.tag && <span className="product-tag">{item.tag}</span>}
-              </div>
-              <div className="product-info">
-                <div className="product-name-row">
-                  <h3 className="product-name">{item.name}</h3>
-                  <span className="product-price">
-                    {formatMoney(item.price)}
-                  </span>
-                </div>
-                <p className="product-desc">{item.desc}</p>
-                <div className="product-meta">
-                  <span>CATÁLOGO BASE</span>
-                  <span>ETAPA 1</span>
+        ) : (
+          <>
+            {/* Categorías activas desde Supabase */}
+            {categories.length > 0 && (
+              <div className="mb-12">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat.id}
+                      to={`/menu/${cat.slug}`}
+                      className="group flex flex-col justify-between p-5 bg-surface-dark border border-sand/15 rounded-[var(--radius-sm)] hover:border-fire transition-colors"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-fire">
+                            Categoría
+                          </span>
+                          <UtensilsCrossed
+                            className="h-4 w-4 text-sand/60 group-hover:text-fire transition-colors"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <h3 className="m-0 mt-2 text-2xl font-medium text-cream sigr-heading-display">
+                          {cat.name}
+                        </h3>
+                        {cat.description && (
+                          <p className="m-0 mt-2 text-xs leading-relaxed text-paper/70">
+                            {cat.description}
+                          </p>
+                        )}
+                      </div>
+                      <span className="mt-4 pt-3 border-t border-sand/15 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-sand group-hover:text-cream transition-colors">
+                        <span>Explorar {cat.name}</span>
+                        <ArrowUpRight className="h-3.5 w-3.5 text-fire" aria-hidden="true" />
+                      </span>
+                    </Link>
+                  ))}
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
+            )}
 
-        <div className="menu-foot">
-          <span>✳</span>
-          <p>
-            ¿No sabes por dónde empezar?
-            <br />
-            <em>La Forjada siempre cae bien.</em>
-          </p>
-          <a href="#destacado" className="under-link">
-            DESCUBRE LA FAVORITA ↗
-          </a>
-        </div>
+            {/* Productos destacados desde Supabase */}
+            {highlightedProducts.length > 0 && (
+              <div>
+                <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+                  <div>
+                    <p className="m-0 text-[10px] font-bold uppercase tracking-[0.16em] text-fire">
+                      SELECCIÓN DE LA CASA
+                    </p>
+                    <h3 className="m-0 mt-1 text-3xl font-medium text-cream sigr-heading-display">
+                      Productos <em className="text-fire">destacados.</em>
+                    </h3>
+                  </div>
+                  <Link
+                    to="/menu"
+                    className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-cream border-b border-fire pb-1 hover:text-fire-hover transition-colors"
+                  >
+                    <span>Ver todo el menú</span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-fire" aria-hidden="true" />
+                  </Link>
+                </div>
+
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                  {highlightedProducts.map((item) => (
+                    <ProductCard key={item.id} product={item} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </section>
 
-      <section className="feature" id="destacado">
-        <div
-          className="feature-image"
-          role="img"
-          aria-label="Hamburguesa especial con ingredientes frescos"
-          style={{ backgroundImage: `url(${featuredProduct.image})` }}
-        />
-        <div className="feature-overlay" />
-        <div className="feature-content reveal">
-          <span className="mini-label">LA FAVORITA DE LA CASA · 01</span>
-          <h2>
-            EL PROTAGONISTA
-            <br />
-            <em>DE LA CASA.</em>
-          </h2>
-          <p>
-            La Forjada junta todo lo que nos mueve: carne a la parrilla, queso
-            fundido, tocineta crocante y nuestra salsa de la casa. Un clásico
-            con fuego propio.
-          </p>
-          <div className="feature-ingredients">
-            <span>CARNE A LA PARRILLA</span>
-            <i>✳</i>
-            <span>QUESO FUNDIDO</span>
-            <i>✳</i>
-            <span>SALSA BRAVA</span>
+      {/* Producto protagonista configurado en restaurant_settings.featured_product_id */}
+      {featuredProduct && (
+        <section className="feature" id="destacado">
+          <div className="feature-image">
+            <ProductImage
+              imageUrl={featuredProduct.image_url}
+              slug={featuredProduct.slug}
+              alt={featuredProduct.name}
+              className="w-full h-full object-cover"
+            />
           </div>
-          <div className="feature-bottom">
-            <span className="feature-price">
-              {formatMoney(featuredProduct.price)} <small>COP</small>
-            </span>
-            <Link className="button button-fire" to="/cliente">
-              IR AL ÁREA CLIENTE <span>↗</span>
-            </Link>
+          <div className="feature-overlay" />
+          <div className="feature-content">
+            <span className="mini-label">LA FAVORITA DE LA CASA · 01</span>
+            <h2>
+              {featuredProduct.name}
+              <br />
+              <em>al fuego.</em>
+            </h2>
+            <p>{featuredProduct.description}</p>
+            <div className="feature-bottom mt-7">
+              <span className="feature-price">
+                {formatMoney(featuredProduct.price)} <small>COP</small>
+              </span>
+              <Link
+                className="button button-fire"
+                to={`/producto/${featuredProduct.slug}`}
+              >
+                <span>VER DETALLE</span>
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="feature-number">
-          01<span>/</span>01
-        </div>
-      </section>
+          <div className="feature-number">
+            01<span>/</span>01
+          </div>
+        </section>
+      )}
 
+      {/* 03 / Propuesta gastronómica */}
       <section className="experience section-light" id="experiencia">
-        <div className="section-kicker reveal">
+        <div className="section-kicker">
           <span>03 / LO QUE NOS MUEVE</span>
           <span>DE LA COCINA A LA MESA</span>
         </div>
-        <div className="experience-heading reveal">
+        <div className="experience-heading">
           <h2>
             EL SABOR ESTÁ
             <br />
@@ -294,7 +348,7 @@ export function HomePage() {
           </p>
         </div>
         <div className="experience-grid">
-          <figure className="experience-card experience-card-tall reveal">
+          <figure className="experience-card experience-card-tall">
             <img
               src={LOCAL_IMAGES.products['doble-carbon']}
               alt="Doble Carbón cocinada a la parrilla"
@@ -306,7 +360,7 @@ export function HomePage() {
               <small>El sabor empieza aquí.</small>
             </figcaption>
           </figure>
-          <figure className="experience-card reveal">
+          <figure className="experience-card">
             <img
               src={LOCAL_IMAGES.products.mazorcada}
               alt="Mazorcada con ingredientes frescos colombianos"
@@ -318,7 +372,7 @@ export function HomePage() {
               <small>Frescos. Sin vueltas.</small>
             </figcaption>
           </figure>
-          <figure className="experience-card reveal">
+          <figure className="experience-card">
             <img
               src={LOCAL_IMAGES.products['salchipapa-mixta']}
               alt="Salchipapa mixta para compartir en mesa"
@@ -333,8 +387,9 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* 04 / Contacto y horarios desde restaurant_settings */}
       <section className="contact-section" id="contacto">
-        <div className="contact-text reveal">
+        <div className="contact-text">
           <div className="section-kicker">
             <span>04 / ENCUÉNTRANOS</span>
             <span>SIEMPRE HAY UN ANTOJO</span>
@@ -345,28 +400,52 @@ export function HomePage() {
             ESTÁ <em>ENCENDIDO.</em>
           </h2>
           <p>
-            Base React + Vite operativa para la evolución de FORJA BRAVA — SIGR.
-            Los módulos de carrito, checkout, reservas, mesero y administración
-            se integrarán progresivamente en las siguientes etapas.
+            Explora la carta actualizada, personaliza tus platos con complementos
+            y arma tu carrito para disfrutar FORJA BRAVA donde prefieras.
           </p>
-          <a className="button button-fire mt-4" href="#menu">
-            EXPLORAR CARTA <span>↗</span>
-          </a>
+          <Link className="button button-fire mt-4" to="/menu">
+            <span>EXPLORAR CARTA</span>
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </div>
 
-        <div className="contact-info reveal">
-          <div className="contact-row">
-            <span>VISÍTANOS</span>
-            <p>{RESTAURANT_INFO.location}</p>
-          </div>
-          <div className="contact-row">
-            <span>HORARIO</span>
-            <p>{RESTAURANT_INFO.hours}</p>
-          </div>
-          <div className="contact-row">
-            <span>ESCRÍBENOS</span>
-            <p>{RESTAURANT_INFO.phone}</p>
-          </div>
+        <div className="contact-info">
+          {settings?.location && (
+            <div className="contact-row">
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-fire" aria-hidden="true" />
+                VISÍTANOS
+              </span>
+              <p>{settings.location}</p>
+            </div>
+          )}
+
+          {businessHours.length > 0 && (
+            <div className="contact-row">
+              <span className="inline-flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-fire" aria-hidden="true" />
+                HORARIO
+              </span>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-cream">
+                {businessHours.map((entry) => (
+                  <p key={entry.day} className="m-0">
+                    <strong className="text-sand">{entry.day}:</strong>{' '}
+                    {entry.schedule}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {settings?.phone && (
+            <div className="contact-row">
+              <span className="inline-flex items-center gap-1.5">
+                <Phone className="h-3.5 w-3.5 text-fire" aria-hidden="true" />
+                TELÉFONO
+              </span>
+              <p>{settings.phone}</p>
+            </div>
+          )}
         </div>
       </section>
     </>
